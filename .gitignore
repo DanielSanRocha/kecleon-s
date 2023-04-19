@@ -1,0 +1,15 @@
+*.o
+*.a
+kernel.bin
+kernel-*
+*.iso
+*.vdi
+*.lock
+target/
+mnt/
+programs/shell/shell
+out.bochs
+*.elf
+!boot/u-boot.bin
+vmlinuz
+*.img
