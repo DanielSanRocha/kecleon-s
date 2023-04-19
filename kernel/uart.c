@@ -1,3 +1,4 @@
+#include "peripheral.h"
 #include "memory.h"
 #include "uart.h"
 

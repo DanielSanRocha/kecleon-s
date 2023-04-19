@@ -29,18 +29,24 @@ clean: # Cleans the directory, run setup after
 
 build: # Build the project targetting the raspi2b(qemu)
 	$(AS) $(AS_PARAMS) -c kernel/main.s -o kernel/main_s.o
-	$(CC) $(CC_PARAMS) -c kernel/main.c -o kernel/main_c.o
+	$(AS) $(AS_PARAMS) -c kernel/interrupts.s -o kernel/interrupts_s.o
+	$(CC) $(CC_PARAMS) -c kernel/main.c -o kernel/main_c.o -D RASPI2B
 	$(CC) $(CC_PARAMS) -c kernel/memory.c -o kernel/memory_c.o
 	$(CC) $(CC_PARAMS) -c kernel/uart.c -o kernel/uart_c.o -D RASPI2B
-	$(LD) -nostdlib -T kernel/raspi2b.ld -o kernel.elf kernel/main_s.o kernel/main_c.o kernel/uart_c.o kernel/memory_c.o
+	$(CC) $(CC_PARAMS) -c kernel/interrupts.c -o kernel/interrupts_c.o -D RASPI2B
+	$(CC) $(CC_PARAMS) -c kernel/timer.c -o kernel/timer_c.o -D RASPI2B
+	$(LD) -nostdlib -T kernel/raspi2b.ld -o kernel.elf kernel/interrupts_s.o kernel/main_s.o kernel/main_c.o kernel/uart_c.o kernel/memory_c.o kernel/interrupts_c.o kernel/timer_c.o
 	$(OBJCOPY) -O binary kernel.elf kernel.bin
 
 build-cubieboard2: # Build the project targetting the cubieboard2 (real hardware)
 	$(AS) $(AS_PARAMS) -c kernel/main.s -o kernel/main_s.o
-	$(CC) $(CC_PARAMS) -c kernel/main.c -o kernel/main_c.o
+	$(AS) $(AS_PARAMS) -c kernel/interrupts.s -o kernel/interrupts_s.o
+	$(CC) $(CC_PARAMS) -c kernel/main.c -o kernel/main_c.o -D CUBIEBOARD2
 	$(CC) $(CC_PARAMS) -c kernel/memory.c -o kernel/memory_c.o
 	$(CC) $(CC_PARAMS) -c kernel/uart.c -o kernel/uart_c.o -D CUBIEBOARD2
-	$(LD) -nostdlib -T kernel/cubieboard2.ld -o kernel.elf kernel/main_s.o kernel/main_c.o kernel/uart_c.o kernel/memory_c.o
+	$(CC) $(CC_PARAMS) -c kernel/interrupts.c -o kernel/interrupts_c.o -D CUBIEBOARD2
+	$(CC) $(CC_PARAMS) -c kernel/timer.c -o kernel/timer_c.o -D CUBIEBOARD2
+	$(LD) -nostdlib -T kernel/cubieboard2.ld -o kernel.elf kernel/main_s.o kernel/main_c.o kernel/uart_c.o kernel/memory_c.o kernel/interrupts_s.o kernel/interrupts_c.o kernel/timer_c.o
 	$(OBJCOPY) -O binary kernel.elf kernel.bin
 
 run: build # Run the project on qemu
