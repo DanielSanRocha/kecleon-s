@@ -2,20 +2,16 @@
 #include "interrupts.h"
 #include "timer.h"
 
-extern void set_irq_stack();
-
 void main() {
-    #ifdef RASPI2B
-    set_irq_stack();
-    #endif
+    uart_print("KecleonS Operating System!\n\n");
 
-    uart_print("Welcome to Kecleon OS!\n");
-
-    uart_print("Initializing interrupts...");
+    uart_print("Initializing interrupts... ");
     interrupts_initialize();
     uart_print("Initialized!\n");
 
-    uart_print("Initializing timer...");
+    uart_print("Initializing timer... ");
     timer_initialize();
     uart_print("Initialized!\n");
+
+    while(1);
 }

@@ -4,24 +4,12 @@
 #include "uart.h"
 
 void timer_initialize() {
-    #ifdef RASPI2B
-    u32 x = inb((void*) TIMER_COUNTER_LOW);
-    outb((void*) TIMER_COMPARE_1, x + 5000);
-    #endif
-
-    #ifdef CUBIEBOARD2
-    outb((void*) TIMER_REGISTER, 0x1);
+    outb((void*) TIMER_IRQ_EN_REG, 0x1);
     outb((void*) TIMER0_INTV_VALUE_REG, 5000);
-    #endif
+    // outb((void*) TIMER0_CUR_VALUE_REG, 50);
+    outb((void*) TIMER0_CTRL_REG, 0x1);
 }
 
 void timer_handler() {
-    #ifdef RASPI2B
-    outb((void*)TIMER_REGISTER, 2);
-
-    u32 x = inb((void*) TIMER_COUNTER_LOW);
-    outb((void*) TIMER_COMPARE_1, x + 5000);
-    #endif
-
     uart_print("fire!");
 }

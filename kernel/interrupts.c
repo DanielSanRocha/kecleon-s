@@ -5,20 +5,12 @@
 #include "timer.h"
 
 void irq_handler(void) {
-    #ifdef RASPI2B
-    u32 pending = inb((void*) INTERRUPTS_PENDING);
-    if ((pending & 0x2) != 0) {
-        timer_handler();
-    }
-    #endif
-    #ifdef CUBIEBOARD2
     timer_handler();
-    #endif
 }
 
 void interrupts_initialize() {
     move_vector_table();
-    outb((void*) INTERRUPTS_SETENABLER_REGISTER, 2);
+    outb((void*) INTERRUPTS_SETENABLE_REG, 2);
 
     enable_interrupts();
 }
